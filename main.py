@@ -38,6 +38,13 @@ def prijava():
     return odgovor
 
 
+@app.route("/komentar", methods=["POST"])
+def poslji_komentar():
+    vsebina_komentarja = request.form.get("vsebina")
+
+    # Tukaj se bo shranil kometar v podatkovno bazo
+
+    return redirect("/")
 
 
 @app.route("/o_meni")
