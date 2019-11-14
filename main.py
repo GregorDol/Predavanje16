@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, make_response
+from modeli import Komentar, db
+
 
 app = Flask(__name__)
+db.create_all()
 
 
 
@@ -8,8 +11,10 @@ app = Flask(__name__)
 def prva_stran():
     ime = request.cookies.get("ime")
 
+    #Preberemo vse komentarje
+    komentarji = db.query(Komentar).all()
 
-    return render_template("prva_stran.html", ime=ime)
+    return render_template("prva_stran.html", ime=ime, komentarji=komentarji)
 
 
 @app.route("/kontakt")
@@ -43,6 +48,14 @@ def poslji_komentar():
     vsebina_komentarja = request.form.get("vsebina")
 
     # Tukaj se bo shranil kometar v podatkovno bazo
+
+    komentar = Komentar(
+        avtor=request.cookies.get("ime"),
+        vsebina = vsebina_komentarja
+    )
+    db.add(komentar)
+
+    db.commit()
 
     return redirect("/")
 
